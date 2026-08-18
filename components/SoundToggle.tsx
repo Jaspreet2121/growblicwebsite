@@ -31,14 +31,17 @@ let master: GainNode | null = null;
 const buffers: Record<string, AudioBuffer> = {};
 let loading: Promise<void> | null = null;
 
-function ensureAudio() {
+function ensureAudio(): Promise<void> {
   if (!ctx) {
     ctx = new AudioContext();
     master = ctx.createGain();
     master.gain.value = 0.85;
     master.connect(ctx.destination);
   }
-  if (ctx.state === "suspended") void ctx.resume();
+  if (ctx.state === "suspended") {
+    return ctx.resume().catch(() => undefined);
+  }
+  return Promise.resolve();
 }
 
 function loadAll(): Promise<void> {
@@ -109,13 +112,17 @@ export default function SoundToggle() {
       localStorage.removeItem("growblic-sound");
       if (sessionStorage.getItem("growblic-sound") === "0") setOn(false);
     } catch {}
-    /* the splash's entry click: a real gesture, so audio can start now */
+    /* the splash's entry click: a real gesture, so audio can start now.
+       If the splash is still up, the beeps speak immediately. */
     const onEnter = () => {
-      ensureAudio();
+      const running = ensureAudio();
       setOn(true);
       try {
         sessionStorage.setItem("growblic-sound", "1");
       } catch {}
+      Promise.all([running, loadAll()]).then(() => {
+        if (document.querySelector(".splash:not(.out)")) shot("beeps");
+      });
     };
     window.addEventListener("growblic-enter-sound", onEnter);
     return () => window.removeEventListener("growblic-enter-sound", onEnter);

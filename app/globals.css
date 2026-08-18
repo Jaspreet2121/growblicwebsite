@@ -2376,3 +2376,26 @@ html.splash-lock body {
     grid-template-columns: 1fr;
   }
 }
+
+
+/* the splash waiting on its entry click */
+
+.splash.ready {
+  cursor: pointer;
+}
+
+.splash-enter.ready {
+  color: var(--text-primary);
+  border-color: var(--accent-muted);
+  animation: enter-pulse 2s var(--ease-soft) infinite;
+}
+
+@keyframes enter-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(56, 212, 123, 0);
+  }
+  50% {
+    box-shadow: 0 0 22px 0 rgba(56, 212, 123, 0.25);
+  }
+}
