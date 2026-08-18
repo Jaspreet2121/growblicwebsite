@@ -136,9 +136,9 @@ export default function SoundToggle() {
           plays++;
           shot("beeps");
         }, 1100);
-      } else if (!manifestoPlayed.current && performance.now() < 15000) {
-        /* sound switched on with the hero already revealed, early in the
-           visit: greet it once */
+      } else if (!manifestoPlayed.current && document.querySelector(".hero")) {
+        /* sound switched on with the hero already revealed: greet it once,
+           whenever that happens */
         manifestoPlayed.current = true;
         shot("manifesto");
       }
