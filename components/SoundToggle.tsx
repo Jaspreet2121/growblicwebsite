@@ -56,7 +56,7 @@ function loadAll(): Promise<void> {
 }
 
 function shot(name: string) {
-  if (!ctx || !master || !buffers[name]) return;
+  if (!ctx || !master || !buffers[name] || ctx.state !== "running") return;
   const src = ctx.createBufferSource();
   src.buffer = buffers[name];
   const g = ctx.createGain();
@@ -99,13 +99,13 @@ function stopMusic() {
 }
 
 export default function SoundToggle() {
-  const [on, setOn] = useState(false);
+  const [on, setOn] = useState(true);
   const lastHover = useRef(0);
   const manifestoPlayed = useRef(false);
 
   useEffect(() => {
     try {
-      if (localStorage.getItem("growblic-sound") === "1") setOn(true);
+      if (localStorage.getItem("growblic-sound") === "0") setOn(false);
     } catch {}
     /* the splash's entry click: a real gesture, so audio can start now */
     const onEnter = () => {
@@ -125,10 +125,24 @@ export default function SoundToggle() {
     ensureAudio();
 
     /* stored-on sessions load with a suspended context until a gesture */
-    const onFirstGesture = () => ensureAudio();
+    const onFirstGesture = () => {
+      ensureAudio();
+      setTimeout(() => {
+        if (alive) tryManifesto();
+      }, 250);
+    };
     addEventListener("pointerdown", onFirstGesture, { once: true });
 
     let splashTimer: ReturnType<typeof setInterval> | null = null;
+
+    const tryManifesto = () => {
+      if (manifestoPlayed.current) return;
+      if (!document.querySelector(".hero")) return;
+      if (document.querySelector(".splash:not(.out)")) return;
+      if (!ctx || ctx.state !== "running" || !buffers.manifesto) return;
+      manifestoPlayed.current = true;
+      shot("manifesto");
+    };
 
     loadAll().then(() => {
       if (!alive) return;
@@ -146,19 +160,14 @@ export default function SoundToggle() {
           plays++;
           shot("beeps");
         }, 1100);
-      } else if (!manifestoPlayed.current && document.querySelector(".hero")) {
-        /* sound switched on with the hero already revealed: greet it once,
-           whenever that happens */
-        manifestoPlayed.current = true;
-        shot("manifesto");
+      } else {
+        tryManifesto();
       }
     });
 
     /* the manifesto sweep marks the hero's reveal */
     const onSplashDone = () => {
-      if (manifestoPlayed.current) return;
-      manifestoPlayed.current = true;
-      loadAll().then(() => alive && shot("manifesto"));
+      loadAll().then(() => alive && tryManifesto());
     };
     window.addEventListener("growblic-splash-done", onSplashDone);
 
