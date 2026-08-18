@@ -200,17 +200,26 @@ export default function Hero() {
     const heroProgress = () =>
       clamp((window.scrollY - hero.offsetTop) / scrollRange, 0, 1);
 
-    /* ---- gated seeks (deadlock-safe) ---- */
+    /* ---- gated seeks (deadlock-safe, with a watchdog) ---- */
     let seekBusy = false;
     let pendingTime: number | null = null;
+    let seekIssuedAt = 0;
 
     function requestSeek(t: number) {
       if (!video.duration) return;
       if (seekBusy) {
-        pendingTime = t;
-        return;
+        /* a seek that has gone unanswered means the browser suspended the
+           element (long idle, background tab): force the gate open so
+           scrubbing can never freeze for good */
+        if (performance.now() - seekIssuedAt > 600) {
+          seekBusy = false;
+        } else {
+          pendingTime = t;
+          return;
+        }
       }
       seekBusy = true;
+      seekIssuedAt = performance.now();
       video.currentTime = t;
     }
 
@@ -439,6 +448,31 @@ export default function Hero() {
     );
     io.observe(hero);
 
+    /* after long idle or a background stay the browser may suspend or drop
+       the media element; on return, reset the gate and revive the film */
+    const onWake = () => {
+      if (document.hidden || !scrubOn) return;
+      seekBusy = false;
+      pendingTime = null;
+      if (video.src && video.readyState < 2 && !stage.classList.contains("video-failed")) {
+        try {
+          video.load();
+        } catch {}
+        video.addEventListener(
+          "canplay",
+          () => requestSeek(heroProgress() * video.duration),
+          { once: true }
+        );
+      } else if (video.duration) {
+        requestSeek(heroProgress() * video.duration);
+      }
+      target = heroProgress();
+      kick();
+    };
+    document.addEventListener("visibilitychange", onWake);
+    addEventListener("pageshow", onWake);
+    addEventListener("focus", onWake);
+
     /* band one's entrance ramp restarts when the splash releases, so the
        opening line assembles in view instead of behind the preloader */
     const onSplashDone = () => {
@@ -466,6 +500,9 @@ export default function Hero() {
       }
       MQLS.forEach((m) => m.removeEventListener("change", applyHeroMode));
       io.disconnect();
+      document.removeEventListener("visibilitychange", onWake);
+      removeEventListener("pageshow", onWake);
+      removeEventListener("focus", onWake);
       window.removeEventListener("growblic-splash-done", onSplashDone);
       video.removeEventListener("seeked", onSeeked);
       video.removeEventListener("error", onVideoError);
