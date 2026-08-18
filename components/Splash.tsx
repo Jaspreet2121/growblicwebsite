@@ -15,7 +15,15 @@ const MAX_HOLD = 4200; /* ms after which the splash releases regardless */
 export default function Splash() {
   const [pct, setPct] = useState(0);
   const [phase, setPhase] = useState<"in" | "out" | "gone">("in");
+  const [entered, setEntered] = useState(false);
   const outRef = useRef(false);
+
+  /* the entry click is the browser gesture that makes loading audible */
+  function enterWithSound() {
+    if (entered) return;
+    setEntered(true);
+    window.dispatchEvent(new CustomEvent("growblic-enter-sound"));
+  }
 
   useEffect(() => {
     const start = performance.now();
@@ -91,13 +99,22 @@ export default function Splash() {
   if (phase === "gone") return null;
 
   return (
-    <div className={`splash${phase === "out" ? " out" : ""}`} aria-hidden="true">
+    <div className={`splash${phase === "out" ? " out" : ""}`}>
       <div className="splash-inner">
         <Mark className="splash-mark" />
-        <div className="splash-bar">
+        <div className="splash-bar" aria-hidden="true">
           <span style={{ transform: `scaleX(${pct / 100})` }} />
         </div>
-        <p className="splash-pct">{String(pct).padStart(2, "0")}%</p>
+        <p className="splash-pct" aria-hidden="true">
+          {String(pct).padStart(2, "0")}%
+        </p>
+        <button
+          type="button"
+          className={`splash-enter${entered ? " entered" : ""}`}
+          onClick={enterWithSound}
+        >
+          {entered ? "Sound on" : "Enter with sound"}
+        </button>
       </div>
     </div>
   );

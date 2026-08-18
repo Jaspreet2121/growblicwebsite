@@ -107,6 +107,16 @@ export default function SoundToggle() {
     try {
       if (localStorage.getItem("growblic-sound") === "1") setOn(true);
     } catch {}
+    /* the splash's entry click: a real gesture, so audio can start now */
+    const onEnter = () => {
+      ensureAudio();
+      setOn(true);
+      try {
+        localStorage.setItem("growblic-sound", "1");
+      } catch {}
+    };
+    window.addEventListener("growblic-enter-sound", onEnter);
+    return () => window.removeEventListener("growblic-enter-sound", onEnter);
   }, []);
 
   useEffect(() => {
