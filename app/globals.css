@@ -24,10 +24,6 @@
   box-sizing: border-box;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 html,
 body {
   overflow-x: hidden;
@@ -1382,9 +1378,6 @@ body.paused *::after {
 /* ---- Reduced motion, honored completely ---- */
 
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
   *,
   *::before,
   *::after {

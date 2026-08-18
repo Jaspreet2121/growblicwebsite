@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import { JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import CursorGlow from "@/components/CursorGlow";
+import SmoothAnchors from "@/components/SmoothAnchors";
 
 const display = localFont({
   src: [
@@ -61,6 +62,7 @@ export default function RootLayout({
         </noscript>
         {children}
         <CursorGlow />
+        <SmoothAnchors />
       </body>
     </html>
   );

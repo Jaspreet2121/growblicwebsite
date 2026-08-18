@@ -155,6 +155,11 @@ export default function SoundToggle() {
 
     loadAll().then(() => {
       if (!alive) return;
+      /* a navigation briefly mounts this component optimistic-on before the
+         stored mute corrects it: honor the store at the moment of truth */
+      try {
+        if (sessionStorage.getItem("growblic-sound") === "0") return;
+      } catch {}
       startMusic();
       /* the splash speaks in terminal beeps while it holds */
       if (document.querySelector(".splash:not(.out)")) {
