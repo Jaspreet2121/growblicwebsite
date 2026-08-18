@@ -1,0 +1,16 @@
+services:
+  web:
+    build: .
+    image: growblic-site
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      CONTACT_TO: ${CONTACT_TO:-hello@growblic.com}
+      CONTACT_FROM: ${CONTACT_FROM:-Growblic Website <onboarding@resend.dev>}
+    volumes:
+      - growblic-leads:/app/data
+
+volumes:
+  growblic-leads:

@@ -39,3 +39,13 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# leads and local env
+/data/
+.env
+.env.local
+
+# pipeline output
+/pipeline/frames/
+/pipeline/raw.mp4
+/pipeline/node_modules/

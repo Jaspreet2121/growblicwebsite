@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Growblic Website
 
-## Getting Started
+The cinematic Growblic site: a scroll-driven hero film that plays as visitors
+scroll, settling into the full company site. Next.js 16, no animation
+libraries, shipped as a Docker container.
 
-First, run the development server:
+## Run it
+
+Local development:
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Production, in Docker:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up -d
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+The site serves on port 3000. Phones and reduced-motion visitors get a
+designed still-image hero and never download the video.
 
-## Learn More
+## The contact form
 
-To learn more about Next.js, take a look at the following resources:
+Every submission is appended to `data/leads.jsonl` (a named Docker volume,
+`growblic-leads`, in compose). Read them any time:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+docker compose exec web cat /app/data/leads.jsonl
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+To also receive each enquiry by email, create a free API key at resend.com
+and set it before starting:
 
-## Deploy on Vercel
+```bash
+RESEND_API_KEY=re_xxx docker compose up -d
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+See `.env.example` for `CONTACT_TO` and `CONTACT_FROM`. Without a key the
+form still works and every lead is kept in the file.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Going live later (documented, not yet done)
+
+1. Point the server: any host that runs Docker works. `docker compose up -d`
+   behind a reverse proxy (Caddy or nginx) terminating HTTPS for
+   growblic.com.
+2. Set `RESEND_API_KEY` (and verify the growblic.com domain in Resend so
+   `CONTACT_FROM` can be a growblic.com address).
+3. Confirm the live origin in `app/layout.tsx` (`metadataBase`, marked with
+   a DEPLOY STEP comment). og tags, sitemap.xml, and robots.txt already point
+   at https://www.growblic.com.
+4. After DNS cutover, verify: page loads over HTTPS, `/assets/hero-scrub.mp4`
+   serves, the browser console is clean, and the scroll film plays.
+
+## Where things live
+
+- `components/Hero.tsx` — the scroll-scrub engine (Blob loader, gated seeks,
+  caption bands, the five static-hero gates duplicated in `app/globals.css`).
+- `components/Mark.tsx` — the Growblic leaf mark, traced from the original
+  logo as SVG.
+- `app/globals.css` — the whole design system. Palette tokens at the top.
+- `public/assets/` — the film (`hero-scrub.mp4`), poster and ending frames,
+  section stills, and app artwork.
+- `pipeline/` — the generative film pipeline (deterministic canvas renderer +
+  headless Chrome driver + ffmpeg encode), the audit harness, and the design
+  package the build follows. Re-rendering the film costs nothing but minutes.

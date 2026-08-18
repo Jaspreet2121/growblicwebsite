@@ -1,0 +1,292 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>html,body{margin:0;padding:0;background:#090a0c}canvas{display:block}</style>
+</head>
+<body>
+<canvas id="c" width="1920" height="1080"></canvas>
+<script>
+/* Four supporting stills in the hero's world: same palette, same glow
+   language, same motes and vignette. One scene per card. */
+
+const W = 1920, H = 1080, CX = W / 2, CYc = H / 2;
+const ctx = document.getElementById('c').getContext('2d');
+
+function mulberry32(seed) {
+  let a = seed >>> 0;
+  return function () {
+    a |= 0; a = (a + 0x6D2B79F5) | 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+
+function bgWorld(seed) {
+  const bg = ctx.createLinearGradient(0, 0, 0, H);
+  bg.addColorStop(0, '#08090b');
+  bg.addColorStop(0.5, '#0e0f12');
+  bg.addColorStop(1, '#090a0c');
+  ctx.globalCompositeOperation = 'source-over';
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, W, H);
+  const amb = ctx.createRadialGradient(CX, CYc, 0, CX, CYc, H * 0.95);
+  amb.addColorStop(0, 'rgba(150,165,190,0.07)');
+  amb.addColorStop(1, 'rgba(150,165,190,0)');
+  ctx.fillStyle = amb;
+  ctx.fillRect(0, 0, W, H);
+  ctx.globalCompositeOperation = 'lighter';
+  const r = mulberry32(seed);
+  for (let m = 0; m < 46; m++) {
+    const x = r() * W, y = r() * H, sz = 1 + r() * 2.4;
+    glowDot(x, y, sz * 3.2, 0.05 + r() * 0.1, 'rgba(205,212,224,A)');
+  }
+}
+
+function vignette() {
+  ctx.globalCompositeOperation = 'source-over';
+  const vg = ctx.createRadialGradient(CX, CYc, H * 0.42, CX, CYc, H * 1.05);
+  vg.addColorStop(0, 'rgba(4,5,6,0)');
+  vg.addColorStop(1, 'rgba(4,5,6,0.62)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+}
+
+function glowDot(x, y, r, a, color) {
+  const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+  g.addColorStop(0, color.replace('A', String(a)));
+  g.addColorStop(1, color.replace('A', '0'));
+  ctx.fillStyle = g;
+  ctx.beginPath();
+  ctx.arc(x, y, r, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function glowStroke(fn, width, coreA, glowA) {
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  ctx.beginPath(); fn();
+  ctx.strokeStyle = 'rgba(150,162,180,' + glowA + ')';
+  ctx.lineWidth = width * 6;
+  ctx.filter = 'blur(12px)';
+  ctx.stroke();
+  ctx.filter = 'none';
+  ctx.strokeStyle = 'rgba(208,216,228,' + coreA * 0.5 + ')';
+  ctx.lineWidth = width * 2.4;
+  ctx.filter = 'blur(3px)';
+  ctx.stroke();
+  ctx.filter = 'none';
+  ctx.strokeStyle = 'rgba(248,250,252,' + coreA + ')';
+  ctx.lineWidth = width;
+  ctx.stroke();
+}
+
+/* 1. Custom software: an ordered lattice assembling out of the dark */
+function sceneLattice() {
+  bgWorld(11);
+  const r = mulberry32(21);
+  const cols = 7, rows = 4, gx = 150, gy = 150;
+  const ox = CX - ((cols - 1) * gx) / 2, oy = CYc - ((rows - 1) * gy) / 2 + 20;
+  for (let i = 0; i < cols; i++) {
+    for (let j = 0; j < rows; j++) {
+      const x = ox + i * gx + (r() - 0.5) * 10;
+      const y = oy + j * gy + (r() - 0.5) * 10;
+      const bright = (i + j) % 3 === 0;
+      if (i < cols - 1)
+        glowStroke(() => { ctx.moveTo(x, y); ctx.lineTo(x + gx, y); }, 1.6, 0.3, 0.06);
+      if (j < rows - 1)
+        glowStroke(() => { ctx.moveTo(x, y); ctx.lineTo(x, y + gy); }, 1.6, 0.22, 0.05);
+      glowDot(x, y, bright ? 26 : 14, bright ? 0.75 : 0.4, 'rgba(226,232,240,A)');
+      glowDot(x, y, 5, 0.95, 'rgba(250,252,254,A)');
+    }
+  }
+  vignette();
+  return 'lattice';
+}
+
+/* 2. Mobile apps: a slender monolith of light, filaments rooting at its base */
+function sceneMonolith() {
+  bgWorld(33);
+  const mw = 320, mh = 640, mx = CX - mw / 2, my = CYc - mh / 2 - 30, rad = 56;
+  const rr = () => { ctx.roundRect(mx, my, mw, mh, rad); };
+  glowStroke(rr, 3, 0.85, 0.16);
+  /* inner glass glow */
+  ctx.globalCompositeOperation = 'lighter';
+  const ig = ctx.createLinearGradient(0, my, 0, my + mh);
+  ig.addColorStop(0, 'rgba(150,162,180,0.08)');
+  ig.addColorStop(1, 'rgba(150,162,180,0.02)');
+  ctx.fillStyle = ig;
+  ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, rad); ctx.fill();
+  glowDot(CX, my + mh * 0.22, 60, 0.5, 'rgba(226,232,240,A)');
+  glowDot(CX, my + mh * 0.22, 12, 0.9, 'rgba(250,252,254,A)');
+  /* filaments rooting from the base */
+  const r = mulberry32(55);
+  for (let i = 0; i < 7; i++) {
+    const sx = mx + 30 + (mw - 60) * (i / 6);
+    const bend = (r() - 0.5) * 260;
+    const drop = 150 + r() * 130;
+    glowStroke(() => {
+      ctx.moveTo(sx, my + mh - 6);
+      ctx.bezierCurveTo(sx, my + mh + drop * 0.4, sx + bend, my + mh + drop * 0.6, sx + bend, my + mh + drop);
+    }, 1.4, 0.4, 0.07);
+    glowDot(sx + bend, my + mh + drop, 10, 0.5, 'rgba(226,232,240,A)');
+  }
+  vignette();
+  return 'monolith';
+}
+
+/* 3. SaaS: three tiers of glowing platforms, connected tier to tier */
+function sceneTiers() {
+  bgWorld(66);
+  const tiers = [
+    { w: 760, y: CYc + 250, a: 0.5 },
+    { w: 560, y: CYc + 20, a: 0.7 },
+    { w: 360, y: CYc - 210, a: 0.95 },
+  ];
+  for (const t of tiers) {
+    const x0 = CX - t.w / 2, x1 = CX + t.w / 2;
+    /* platform: a soft ellipse slab */
+    ctx.globalCompositeOperation = 'lighter';
+    const g = ctx.createRadialGradient(CX, t.y, 0, CX, t.y, t.w / 2);
+    g.addColorStop(0, 'rgba(150,162,180,' + 0.18 * t.a + ')');
+    g.addColorStop(0.8, 'rgba(150,162,180,' + 0.05 * t.a + ')');
+    g.addColorStop(1, 'rgba(150,162,180,0)');
+    ctx.save();
+    ctx.translate(CX, t.y);
+    ctx.scale(1, 0.22);
+    ctx.translate(-CX, -t.y);
+    ctx.fillStyle = g;
+    ctx.beginPath(); ctx.arc(CX, t.y, t.w / 2, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    glowStroke(() => {
+      ctx.ellipse(CX, t.y, t.w / 2, t.w / 9, 0, 0, Math.PI * 2);
+    }, 2, 0.6 * t.a, 0.1 * t.a);
+  }
+  /* connecting filaments */
+  const r = mulberry32(77);
+  for (let i = 0; i < 3; i++) {
+    for (let k = 0; k < 2; k++) {
+      const from = tiers[k], to = tiers[k + 1];
+      const fx = CX + (r() - 0.5) * from.w * 0.5;
+      const tx = CX + (r() - 0.5) * to.w * 0.5;
+      glowStroke(() => {
+        ctx.moveTo(fx, from.y - 8);
+        ctx.bezierCurveTo(fx, (from.y + to.y) / 2, tx, (from.y + to.y) / 2, tx, to.y + 8);
+      }, 1.3, 0.45, 0.07);
+    }
+  }
+  glowDot(CX, tiers[2].y - 6, 40, 0.55, 'rgba(226,232,240,A)');
+  vignette();
+  return 'tiers';
+}
+
+/* 4. AI: a soft sphere of light with fine tendrils reaching outward */
+function sceneSphere() {
+  bgWorld(99);
+  const R = 190;
+  ctx.globalCompositeOperation = 'lighter';
+  glowDot(CX, CYc, R * 2.6, 0.22, 'rgba(190,200,214,A)');
+  glowDot(CX, CYc, R * 1.15, 0.5, 'rgba(205,212,224,A)');
+  glowDot(CX, CYc, R * 0.5, 0.75, 'rgba(240,243,247,A)');
+  glowStroke(() => { ctx.arc(CX, CYc, R, 0, Math.PI * 2); }, 2, 0.5, 0.1);
+  const r = mulberry32(123);
+  for (let i = 0; i < 14; i++) {
+    const ang = (i / 14) * Math.PI * 2 + r() * 0.3;
+    const len = R + 90 + r() * 260;
+    const sx = CX + Math.cos(ang) * (R + 6), sy = CYc + Math.sin(ang) * (R + 6) * 0.92;
+    const mx = CX + Math.cos(ang + 0.25) * (R + len) * 0.6;
+    const my = CYc + Math.sin(ang + 0.25) * (R + len) * 0.55;
+    const ex = CX + Math.cos(ang + 0.12) * len * 1.15;
+    const ey = CYc + Math.sin(ang + 0.12) * len * 0.95;
+    glowStroke(() => {
+      ctx.moveTo(sx, sy);
+      ctx.quadraticCurveTo(mx, my, ex, ey);
+    }, 1.2, 0.38, 0.06);
+    glowDot(ex, ey, 9, 0.55, 'rgba(226,232,240,A)');
+  }
+  /* orbiting motes */
+  for (let i = 0; i < 10; i++) {
+    const ang = r() * Math.PI * 2;
+    const d = R * (1.3 + r() * 1.1);
+    glowDot(CX + Math.cos(ang) * d, CYc + Math.sin(ang) * d * 0.7, 6 + r() * 8, 0.35, 'rgba(226,232,240,A)');
+  }
+  vignette();
+  return 'sphere';
+}
+
+
+/* 5. Website development: a glowing browser frame with a living page inside */
+function sceneBrowser() {
+  bgWorld(140);
+  const bw = 860, bh = 540, bx = CX - bw / 2, by = CYc - bh / 2 - 10, rad = 26;
+  glowStroke(() => { ctx.roundRect(bx, by, bw, bh, rad); }, 2.6, 0.8, 0.14);
+  /* top bar */
+  glowStroke(() => { ctx.moveTo(bx + 4, by + 64); ctx.lineTo(bx + bw - 4, by + 64); }, 1.4, 0.4, 0.05);
+  for (let i = 0; i < 3; i++) glowDot(bx + 34 + i * 30, by + 32, 7, 0.55, 'rgba(226,232,240,A)');
+  ctx.globalCompositeOperation = 'lighter';
+  const ig = ctx.createLinearGradient(0, by, 0, by + bh);
+  ig.addColorStop(0, 'rgba(150,162,180,0.07)');
+  ig.addColorStop(1, 'rgba(150,162,180,0.015)');
+  ctx.fillStyle = ig;
+  ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, rad); ctx.fill();
+  /* page skeleton of light inside */
+  glowStroke(() => { ctx.moveTo(bx + 60, by + 140); ctx.lineTo(bx + 430, by + 140); }, 2.2, 0.7, 0.08);
+  glowStroke(() => { ctx.moveTo(bx + 60, by + 186); ctx.lineTo(bx + 330, by + 186); }, 1.4, 0.4, 0.04);
+  const r = mulberry32(77);
+  for (let i = 0; i < 3; i++) {
+    const cx0 = bx + 60 + i * 250, cy0 = by + 260, cw = 210, ch = 180;
+    glowStroke(() => { ctx.roundRect(cx0, cy0, cw, ch, 14); }, 1.3, 0.4 + (i === 1 ? 0.25 : 0), 0.05);
+    glowDot(cx0 + cw / 2, cy0 + 60, 20 + (i === 1 ? 10 : 0), 0.4, 'rgba(226,232,240,A)');
+  }
+  glowDot(bx + 110, by + 500, 34, 0.5, 'rgba(226,232,240,A)');
+  vignette();
+  return 'browser';
+}
+
+
+/* 6. Skifi: a conversation of light, two bubbles and the thread between them */
+function sceneChat() {
+  bgWorld(210);
+  const b1 = { x: CX - 330, y: CYc - 170, w: 460, h: 170, r: 60 };
+  const b2 = { x: CX - 60, y: CYc + 40, w: 420, h: 160, r: 60 };
+  /* the thread that carries the message */
+  glowStroke(() => {
+    ctx.moveTo(b1.x + b1.w * 0.7, b1.y + b1.h);
+    ctx.bezierCurveTo(b1.x + b1.w * 0.85, b1.y + b1.h + 90, b2.x + 40, b2.y - 90, b2.x + b2.w * 0.25, b2.y);
+  }, 1.6, 0.5, 0.08);
+  /* bubble one */
+  glowStroke(() => { ctx.roundRect(b1.x, b1.y, b1.w, b1.h, b1.r); }, 2.6, 0.8, 0.14);
+  ctx.globalCompositeOperation = 'lighter';
+  ctx.fillStyle = 'rgba(150,162,180,0.05)';
+  ctx.beginPath(); ctx.roundRect(b1.x, b1.y, b1.w, b1.h, b1.r); ctx.fill();
+  /* text lines of light inside bubble one */
+  glowStroke(() => { ctx.moveTo(b1.x + 52, b1.y + 64); ctx.lineTo(b1.x + 330, b1.y + 64); }, 1.6, 0.5, 0.05);
+  glowStroke(() => { ctx.moveTo(b1.x + 52, b1.y + 106); ctx.lineTo(b1.x + 240, b1.y + 106); }, 1.4, 0.35, 0.04);
+  /* bubble two, replying */
+  glowStroke(() => { ctx.roundRect(b2.x, b2.y, b2.w, b2.h, b2.r); }, 2.6, 0.8, 0.14);
+  ctx.fillStyle = 'rgba(150,162,180,0.05)';
+  ctx.beginPath(); ctx.roundRect(b2.x, b2.y, b2.w, b2.h, b2.r); ctx.fill();
+  /* typing dots, mid-thought */
+  for (let i = 0; i < 3; i++) {
+    glowDot(b2.x + 90 + i * 68, b2.y + b2.h / 2, 16 - i * 2, 0.7 - i * 0.16, 'rgba(240,243,247,A)');
+  }
+  /* one jade pulse where the reply lands: the single color note */
+  glowDot(b2.x + b2.w - 44, b2.y + 42, 14, 0.7, 'rgba(56,212,123,A)');
+  vignette();
+  return 'chat';
+}
+
+window.SCENES = {
+  'still-custom': sceneLattice,
+  'still-web': sceneBrowser,
+  'still-skifi': sceneChat,
+  'still-mobile': sceneMonolith,
+  'still-saas': sceneTiers,
+  'still-ai': sceneSphere,
+};
+window.renderScene = (name) => window.SCENES[name]();
+</script>
+</body>
+</html>
