@@ -98,7 +98,7 @@ export default function ContactForm() {
       </div>
       <div className="form-foot full">
         <button className="btn btn-solid" type="submit" disabled={status === "sending"}>
-          {status === "sending" ? "Sending..." : "Start your project"}
+          {status === "sending" ? "Sending..." : "Send message"}
         </button>
         <p className="alt">
           Prefer email? <a href="mailto:hello@growblic.com">hello@growblic.com</a>

@@ -105,14 +105,16 @@ export default function SoundToggle() {
 
   useEffect(() => {
     try {
-      if (localStorage.getItem("growblic-sound") === "0") setOn(false);
+      /* mute is per-visit: every fresh load starts with sound on */
+      localStorage.removeItem("growblic-sound");
+      if (sessionStorage.getItem("growblic-sound") === "0") setOn(false);
     } catch {}
     /* the splash's entry click: a real gesture, so audio can start now */
     const onEnter = () => {
       ensureAudio();
       setOn(true);
       try {
-        localStorage.setItem("growblic-sound", "1");
+        sessionStorage.setItem("growblic-sound", "1");
       } catch {}
     };
     window.addEventListener("growblic-enter-sound", onEnter);
@@ -202,7 +204,7 @@ export default function SoundToggle() {
     const next = !on;
     setOn(next);
     try {
-      localStorage.setItem("growblic-sound", next ? "1" : "0");
+      sessionStorage.setItem("growblic-sound", next ? "1" : "0");
     } catch {}
     if (next) ensureAudio();
   }

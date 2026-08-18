@@ -66,9 +66,6 @@ export default function Footer() {
             <li>
               <a href="mailto:hello@growblic.com">hello@growblic.com</a>
             </li>
-            <li>
-              <a href="/#start">Start a project</a>
-            </li>
           </ul>
         </div>
       </div>

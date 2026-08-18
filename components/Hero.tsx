@@ -509,10 +509,7 @@ export default function Hero() {
               <p className="settle-line">Growth, engineered.</p>
               <div className="bloom-window" aria-hidden="true" />
               <div className="settle-ctas">
-                <a className="btn btn-solid" href="#start">
-                  Start your project
-                </a>
-                <a className="btn btn-ghost" href="#work">
+                <a className="btn btn-solid" href="#work">
                   See the work
                 </a>
               </div>
@@ -528,8 +525,8 @@ export default function Hero() {
             Growblic designs, builds, and grows websites, apps, SaaS, and AI
             products for modern businesses.
           </p>
-          <a className="btn btn-solid" href="#start">
-            Start your project
+          <a className="btn btn-solid" href="#work">
+            See our work
           </a>
         </div>
 
