@@ -33,7 +33,6 @@ export default function PlantMoment() {
       p = 1;
       write();
       sec!.classList.add("grown");
-      window.dispatchEvent(new CustomEvent("growblic-grown"));
     }
 
     function tick(now: number) {

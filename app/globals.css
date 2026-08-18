@@ -1968,44 +1968,6 @@ body.paused *::after {
 }
 
 
-/* ---- Sound toggle ---- */
-
-.nav-right {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.sound-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  border: 1px solid var(--panel-edge);
-  background: rgba(16, 18, 22, 0.4);
-  color: var(--text-secondary);
-  cursor: pointer;
-  transition: color 0.3s var(--ease-soft), border-color 0.3s var(--ease-soft);
-}
-
-.sound-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.sound-btn:hover {
-  border-color: var(--accent-muted);
-  color: var(--text-primary);
-}
-
-.sound-btn.on {
-  color: var(--accent);
-  border-color: var(--accent-muted);
-}
-
-
 
 /* ---- The cursor: dot and gliding ring ---- */
 
