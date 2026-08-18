@@ -2385,9 +2385,16 @@ html.splash-lock body {
 }
 
 .splash-enter.ready {
+  /* the ready state replaces the fade-in animation, so visibility must be
+     explicit here or the button vanishes exactly when it matters */
+  opacity: 1;
   color: var(--text-primary);
   border-color: var(--accent-muted);
   animation: enter-pulse 2s var(--ease-soft) infinite;
+}
+
+.splash-enter.entered {
+  opacity: 1;
 }
 
 @keyframes enter-pulse {
