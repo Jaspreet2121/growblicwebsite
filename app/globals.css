@@ -2406,3 +2406,84 @@ html.splash-lock body {
     box-shadow: 0 0 22px 0 rgba(56, 212, 123, 0.25);
   }
 }
+
+
+/* ---- About page ---- */
+
+.subpage .sec {
+  padding-top: clamp(56px, 8vh, 100px);
+}
+
+.subpage .apps-head {
+  padding-top: clamp(120px, 18vh, 190px);
+}
+
+.about-story-sec .about-story,
+.about-cats .lede {
+  margin-top: 24px;
+}
+
+.cat-grid {
+  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.cat-card {
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 16px;
+  padding: 20px 22px;
+  transition: border-color 0.35s var(--ease-soft), transform 0.35s var(--ease-out);
+}
+
+.cat-card:hover {
+  border-color: var(--accent-muted);
+  transform: translateY(-3px);
+}
+
+.cat-card h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 500;
+  font-size: 1.08rem;
+}
+
+.cat-card p {
+  margin-top: 6px;
+  font-family: var(--font-mono), monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  color: var(--text-secondary);
+}
+
+.contact-ctas {
+  margin-top: 26px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.contact-list {
+  list-style: none;
+}
+
+.contact-list li {
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(34, 37, 43, 0.5);
+}
+
+.contact-list li:last-child {
+  border-bottom: none;
+}
+
+.contact-list a {
+  color: var(--text-primary);
+  opacity: 0.85;
+  text-decoration: none;
+  transition: color 0.3s var(--ease-soft);
+}
+
+.contact-list a:hover {
+  color: var(--accent-hover);
+}

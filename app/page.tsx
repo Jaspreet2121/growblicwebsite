@@ -283,6 +283,9 @@ export default function Home() {
                 <a className="about-join" href="/careers">
                   We are hiring. See careers
                 </a>
+                <a className="about-join" href="/about">
+                  More about us
+                </a>
               </div>
             </div>
           </Reveal>

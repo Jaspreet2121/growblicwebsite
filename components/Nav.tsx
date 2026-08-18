@@ -37,7 +37,7 @@ export default function Nav() {
           <a href="/apps">Apps</a>
         </li>
         <li>
-          <a href="/#about">About</a>
+          <a href="/about">About</a>
         </li>
         <li>
           <a href="/pricing">Pricing</a>
