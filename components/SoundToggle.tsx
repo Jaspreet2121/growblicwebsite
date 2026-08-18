@@ -1,10 +1,11 @@
 "use client";
 
 /* The site's sound, synthesized live (no audio files), off by default.
-   The bed is a warm quiet chord with the faintest air and distant chimes.
-   Scroll speaks in soft kalimba-like plucks stepping along a pentatonic
-   ladder as you move. The nav toggle is the user gesture that unlocks
-   audio, and the choice persists in localStorage. */
+   Architecture studied from igloo.inc (all audio here is original): loops run
+   constantly and movement fades them, a room tone sits under a quiet chord
+   and distant chimes, wind rises with scroll, and a soft swell opens the
+   visit. The nav toggle is the user gesture that unlocks audio; the choice
+   persists in localStorage. */
 
 import { useEffect, useRef, useState } from "react";
 
@@ -43,30 +44,6 @@ function tone(
   osc.stop(t0 + dur + 0.05);
 }
 
-/* a soft mallet note: fundamental plus a whisper of octave, quick attack,
-   round decay */
-function pluck(freq: number, gain = 0.055) {
-  if (!ctx || !master) return;
-  const t0 = ctx.currentTime;
-  const detune = 1 + (Math.random() - 0.5) * 0.004;
-  for (const [mult, g, dur] of [
-    [1, gain, 0.42],
-    [2, gain * 0.22, 0.28],
-  ] as const) {
-    const osc = ctx.createOscillator();
-    osc.type = "sine";
-    osc.frequency.value = freq * mult * detune;
-    const og = ctx.createGain();
-    og.gain.setValueAtTime(0, t0);
-    og.gain.linearRampToValueAtTime(g, t0 + 0.006);
-    og.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
-    osc.connect(og);
-    og.connect(master);
-    osc.start(t0);
-    osc.stop(t0 + dur + 0.05);
-  }
-}
-
 const play = {
   hover: () => tone(1180 + Math.random() * 120, 0.05, 0.05),
   click: () => {
@@ -78,6 +55,19 @@ const play = {
     tone(987.77, 0.5, 0.07, "sine", 0.12);
   },
 };
+
+function brownBuffer(seconds: number): AudioBuffer {
+  const len = Math.floor(ctx!.sampleRate * seconds);
+  const buf = ctx!.createBuffer(1, len, ctx!.sampleRate);
+  const d = buf.getChannelData(0);
+  let b = 0;
+  for (let i = 0; i < len; i++) {
+    const w = Math.random() * 2 - 1;
+    b = (b + 0.02 * w) / 1.02;
+    d[i] = b * 3.5;
+  }
+  return buf;
+}
 
 function whiteBuffer(seconds: number): AudioBuffer {
   const len = Math.floor(ctx!.sampleRate * seconds);
@@ -129,6 +119,21 @@ function ensureBed() {
   lfoDepth.connect(padGains[2].gain);
   lfo.start();
   stops.push(() => lfo.stop());
+
+  /* room tone: a low, constant body under everything (igloo-style room-bg) */
+  const room = ctx.createBufferSource();
+  room.buffer = brownBuffer(4);
+  room.loop = true;
+  const roomLp = ctx.createBiquadFilter();
+  roomLp.type = "lowpass";
+  roomLp.frequency.value = 210;
+  const roomG = ctx.createGain();
+  roomG.gain.value = 0.05;
+  room.connect(roomLp);
+  roomLp.connect(roomG);
+  roomG.connect(out);
+  room.start();
+  stops.push(() => room.stop());
 
   /* only a trace of air remains */
   const wash = ctx.createBufferSource();
@@ -193,17 +198,104 @@ function stopBed() {
   }, 1200);
 }
 
-/* the scroll ladder: one soft pluck per step of travel, notes descending
-   as the page deepens, in the chimes' pentatonic world */
-const LADDER = [783.99, 659.25, 587.33, 493.88, 440.0, 392.0];
-const STEP = 340; /* px of scroll per note */
+/* ---- the wind: silent until movement, alive with gusts (igloo-style) ---- */
 
-function ladderNote(y: number): number {
-  const idx = Math.floor(y / STEP);
-  const n = LADDER.length;
-  const cycle = (n - 1) * 2;
-  const k = ((idx % cycle) + cycle) % cycle;
-  return LADDER[k < n ? k : cycle - k];
+let wind: {
+  macro: GainNode;
+  lp: BiquadFilterNode;
+  stops: (() => void)[];
+} | null = null;
+
+function ensureWind() {
+  if (!ctx || !master || wind) return;
+  const stops: (() => void)[] = [];
+  const src = ctx.createBufferSource();
+  src.buffer = brownBuffer(5);
+  src.loop = true;
+  const lp = ctx.createBiquadFilter();
+  lp.type = "lowpass";
+  lp.frequency.value = 420;
+  lp.Q.value = 0.6;
+  const gustG = ctx.createGain();
+  gustG.gain.value = 1;
+  const macro = ctx.createGain();
+  macro.gain.value = 0;
+  src.connect(lp);
+  lp.connect(gustG);
+  gustG.connect(macro);
+  macro.connect(master);
+  src.start();
+  stops.push(() => src.stop());
+
+  /* two slow detuned LFOs make the gusts breathe instead of hissing flat */
+  const g1 = ctx.createOscillator();
+  g1.frequency.value = 0.13;
+  const g1d = ctx.createGain();
+  g1d.gain.value = 0.28;
+  g1.connect(g1d);
+  g1d.connect(gustG.gain);
+  g1.start();
+  stops.push(() => g1.stop());
+  const g2 = ctx.createOscillator();
+  g2.frequency.value = 0.047;
+  const g2d = ctx.createGain();
+  g2d.gain.value = 140;
+  g2.connect(g2d);
+  g2d.connect(lp.frequency);
+  g2.start();
+  stops.push(() => g2.stop());
+
+  wind = { macro, lp, stops };
+}
+
+function stopWind() {
+  if (!wind) return;
+  try {
+    wind.stops.forEach((s) => s());
+    wind.macro.disconnect();
+  } catch {}
+  wind = null;
+}
+
+/* ---- the loader swell: a soft rise for the splash, synthesized once ---- */
+
+function playIntro() {
+  if (!ctx || !master) return;
+  const t0 = ctx.currentTime;
+  /* a breath of air sweeping upward */
+  const n = ctx.createBufferSource();
+  n.buffer = whiteBuffer(3);
+  const bp = ctx.createBiquadFilter();
+  bp.type = "bandpass";
+  bp.Q.value = 1.1;
+  bp.frequency.setValueAtTime(260, t0);
+  bp.frequency.exponentialRampToValueAtTime(1300, t0 + 2.2);
+  const ng = ctx.createGain();
+  ng.gain.setValueAtTime(0, t0);
+  ng.gain.linearRampToValueAtTime(0.06, t0 + 1.6);
+  ng.gain.exponentialRampToValueAtTime(0.0001, t0 + 2.8);
+  n.connect(bp);
+  bp.connect(ng);
+  ng.connect(master);
+  n.start(t0);
+  n.stop(t0 + 3);
+  /* two warm tones opening underneath */
+  for (const [f, g, at] of [
+    [196.0, 0.05, 0],
+    [293.66, 0.035, 0.5],
+  ] as const) {
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.value = f;
+    const og = ctx.createGain();
+    og.gain.setValueAtTime(0, t0 + at);
+    og.gain.linearRampToValueAtTime(g, t0 + at + 1.2);
+    og.gain.exponentialRampToValueAtTime(0.0001, t0 + 3.2);
+    osc.connect(og);
+    og.connect(master);
+    osc.start(t0 + at);
+    osc.stop(t0 + 3.4);
+  }
 }
 
 export default function SoundToggle() {
@@ -220,23 +312,48 @@ export default function SoundToggle() {
     if (!on) return;
     ensureAudio();
     ensureBed();
+    ensureWind();
+
+    /* the loader swell greets a fresh visit */
+    if (performance.now() < 8000) playIntro();
 
     /* stored-on sessions load with a suspended context until the browser sees
        a gesture; the first interaction wakes everything */
     const onFirstGesture = () => ensureAudio();
     addEventListener("pointerdown", onFirstGesture, { once: true });
 
-    /* scroll plucks: fire one per STEP of travel, gently rate-limited */
-    let anchorY = window.scrollY;
-    let lastPluckT = 0;
+    /* the wind fades in with scroll speed and dies back to silence at rest */
+    let lastY = window.scrollY;
+    let lastT = performance.now();
+    let level = 0;
+    let target = 0;
+    let raf: number | null = null;
+    const settle = () => {
+      raf = null;
+      level += (target - level) * 0.08;
+      target *= 0.9;
+      if (wind && ctx) {
+        wind.macro.gain.setTargetAtTime(level * 0.5, ctx.currentTime, 0.06);
+        wind.lp.frequency.setTargetAtTime(
+          420 + level * 780,
+          ctx.currentTime,
+          0.1
+        );
+      }
+      if (level > 0.004 || target > 0.004) {
+        raf = requestAnimationFrame(settle);
+      } else if (wind && ctx) {
+        wind.macro.gain.setTargetAtTime(0, ctx.currentTime, 0.12);
+      }
+    };
     const onScroll = () => {
-      const y = window.scrollY;
-      if (Math.abs(y - anchorY) < STEP) return;
       const now = performance.now();
-      anchorY = y - (y % STEP);
-      if (now - lastPluckT < 85) return;
-      lastPluckT = now;
-      pluck(ladderNote(y));
+      const dt = Math.max(16, now - lastT);
+      const v = Math.abs(window.scrollY - lastY) / dt;
+      lastY = window.scrollY;
+      lastT = now;
+      target = Math.min(1, v / 2.6);
+      if (raf === null) raf = requestAnimationFrame(settle);
     };
     addEventListener("scroll", onScroll, { passive: true });
 
@@ -261,6 +378,8 @@ export default function SoundToggle() {
     return () => {
       removeEventListener("scroll", onScroll);
       removeEventListener("pointerdown", onFirstGesture);
+      if (raf !== null) cancelAnimationFrame(raf);
+      stopWind();
       stopBed();
       removeEventListener("pointerover", onOver);
       removeEventListener("click", onClick);
