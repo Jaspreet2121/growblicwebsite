@@ -1,3 +1,4 @@
+import Link from "next/link";
 import Mark from "./Mark";
 import { SKIFI_URL, GROWBLIC_APP_URL } from "./links";
 
@@ -12,10 +13,10 @@ export default function Footer() {
       </div>
       <div className="footer-inner">
         <div className="footer-brand">
-          <a className="nav-brand" href="/#top">
+          <Link className="nav-brand" href="/">
             <Mark />
             Growblic
-          </a>
+          </Link>
           <p>
             Premium digital products for modern businesses. Ideas, engineered
             into software people love to use.
@@ -25,22 +26,22 @@ export default function Footer() {
           <h4>Explore</h4>
           <ul>
             <li>
-              <a href="/#services">Services</a>
+              <Link href="/#services">Services</Link>
             </li>
             <li>
-              <a href="/about">About</a>
+              <Link href="/about">About</Link>
             </li>
             <li>
-              <a href="/#process">Process</a>
+              <Link href="/#process">Process</Link>
             </li>
             <li>
-              <a href="/pricing">Pricing</a>
+              <Link href="/pricing">Pricing</Link>
             </li>
             <li>
-              <a href="/#faq">FAQ</a>
+              <Link href="/#faq">FAQ</Link>
             </li>
             <li>
-              <a href="/careers">Careers</a>
+              <Link href="/careers">Careers</Link>
             </li>
           </ul>
         </div>
@@ -62,7 +63,7 @@ export default function Footer() {
               </a>
             </li>
             <li>
-              <a href="/apps">All our apps</a>
+              <Link href="/apps">All our apps</Link>
             </li>
           </ul>
         </div>

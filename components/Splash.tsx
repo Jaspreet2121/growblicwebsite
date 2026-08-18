@@ -51,10 +51,17 @@ export default function Splash() {
     document.documentElement.classList.add("splash-lock");
 
     const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let seen = false;
+    try {
+      seen = sessionStorage.getItem("growblic-splashed") === "1";
+    } catch {}
 
     const finish = () => {
       if (outRef.current) return;
       outRef.current = true;
+      try {
+        sessionStorage.setItem("growblic-splashed", "1");
+      } catch {}
       setPct(100);
       setPhase("out");
       /* announce after React paints the out state, so listeners that check
@@ -72,7 +79,8 @@ export default function Splash() {
     };
     finishRef.current = finish;
 
-    if (reduced) {
+    if (reduced || seen) {
+      /* the theatre plays once per visit; returns skip straight through */
       finish();
       return () => {
         if (outTimer) clearTimeout(outTimer);

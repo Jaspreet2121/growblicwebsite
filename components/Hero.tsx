@@ -204,6 +204,8 @@ export default function Hero() {
     let seekBusy = false;
     let pendingTime: number | null = null;
     let seekIssuedAt = 0;
+    let lastSeekOk = performance.now();
+    let lastRecoverAt = 0;
 
     function requestSeek(t: number) {
       if (!video.duration) return;
@@ -225,6 +227,7 @@ export default function Hero() {
 
     const onSeeked = () => {
       seekBusy = false;
+      lastSeekOk = performance.now();
       if (pendingTime !== null) {
         const t = pendingTime;
         pendingTime = null;
@@ -236,6 +239,29 @@ export default function Hero() {
       pendingTime = null;
       failVideo();
     };
+
+    /* the last line of defense: reload the media and land back on the exact
+       scroll position. Used when the browser silently suspends the decoder. */
+    function recoverVideo() {
+      const now = performance.now();
+      if (now - lastRecoverAt < 5000) return;
+      lastRecoverAt = now;
+      seekBusy = false;
+      pendingTime = null;
+      lastSeekOk = now;
+      if (!video.src || stage.classList.contains("video-failed")) return;
+      try {
+        video.load();
+      } catch {}
+      video.addEventListener(
+        "canplay",
+        () => {
+          lastSeekOk = performance.now();
+          requestSeek(heroProgress() * video.duration);
+        },
+        { once: true }
+      );
+    }
     video.addEventListener("seeked", onSeeked);
     video.addEventListener("error", onVideoError);
 
@@ -309,7 +335,17 @@ export default function Hero() {
       } else {
         rafId = requestAnimationFrame(tick);
       }
-      if (video.duration) requestSeek(shown * video.duration);
+      if (video.duration) {
+        requestSeek(shown * video.duration);
+        /* seeks that stop landing while we are actively scrubbing mean the
+           decoder was suspended: heal it */
+        if (
+          now - lastSeekOk > 1600 &&
+          Math.abs(video.currentTime - shown * video.duration) > 0.15
+        ) {
+          recoverVideo();
+        }
+      }
       updateCaptions(shown);
     }
 
@@ -403,10 +439,18 @@ export default function Hero() {
     }
 
     /* ---- the five gates, decided live ---- */
+    let keepAlive: ReturnType<typeof setInterval> | null = null;
+
     function enableScrub() {
       if (scrubOn) return;
       scrubOn = true;
       initHeroOnce();
+      keepAlive = setInterval(() => {
+        if (!seekBusy && video.duration && heroOnScreen && !document.hidden) {
+          lastSeekOk = performance.now();
+          requestSeek(shown * video.duration);
+        }
+      }, 15000);
       addEventListener("scroll", onScroll, { passive: true });
       addEventListener("resize", onResize);
       opCache.fill(-1);
@@ -419,6 +463,10 @@ export default function Hero() {
     function disableScrub() {
       if (!scrubOn) return;
       scrubOn = false;
+      if (keepAlive !== null) {
+        clearInterval(keepAlive);
+        keepAlive = null;
+      }
       removeEventListener("scroll", onScroll);
       removeEventListener("resize", onResize);
       if (rafId !== null) {
@@ -454,15 +502,14 @@ export default function Hero() {
       if (document.hidden || !scrubOn) return;
       seekBusy = false;
       pendingTime = null;
-      if (video.src && video.readyState < 2 && !stage.classList.contains("video-failed")) {
-        try {
-          video.load();
-        } catch {}
-        video.addEventListener(
-          "canplay",
-          () => requestSeek(heroProgress() * video.duration),
-          { once: true }
-        );
+      lastSeekOk = performance.now();
+      if (
+        video.src &&
+        video.readyState < 2 &&
+        !stage.classList.contains("video-failed")
+      ) {
+        lastRecoverAt = 0;
+        recoverVideo();
       } else if (video.duration) {
         requestSeek(heroProgress() * video.duration);
       }

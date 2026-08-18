@@ -70,6 +70,7 @@ function shot(name: string) {
 }
 
 let music: { src: AudioBufferSourceNode; gain: GainNode } | null = null;
+let manifestoDone = false;
 
 function startMusic() {
   if (!ctx || !master || music || !buffers.music) return;
@@ -104,7 +105,6 @@ function stopMusic() {
 export default function SoundToggle() {
   const [on, setOn] = useState(true);
   const lastHover = useRef(0);
-  const manifestoPlayed = useRef(false);
 
   useEffect(() => {
     try {
@@ -145,11 +145,11 @@ export default function SoundToggle() {
     let splashTimer: ReturnType<typeof setInterval> | null = null;
 
     const tryManifesto = () => {
-      if (manifestoPlayed.current) return;
+      if (manifestoDone) return;
       if (!document.querySelector(".hero")) return;
       if (document.querySelector(".splash:not(.out)")) return;
       if (!ctx || ctx.state !== "running" || !buffers.manifesto) return;
-      manifestoPlayed.current = true;
+      manifestoDone = true;
       shot("manifesto");
     };
 
@@ -203,7 +203,6 @@ export default function SoundToggle() {
       window.removeEventListener("growblic-splash-done", onSplashDone);
       removeEventListener("pointerover", onOver);
       removeEventListener("click", onClick);
-      stopMusic();
     };
   }, [on]);
 
@@ -214,6 +213,7 @@ export default function SoundToggle() {
       sessionStorage.setItem("growblic-sound", next ? "1" : "0");
     } catch {}
     if (next) ensureAudio();
+    else stopMusic();
   }
 
   return (

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import Mark from "./Mark";
 import SoundToggle from "./SoundToggle";
 
@@ -25,33 +26,36 @@ export default function Nav() {
 
   return (
     <nav className="nav" ref={ref} aria-label="Main">
-      <a className="nav-brand" href="/#top">
+      <Link className="nav-brand" href="/">
         <Mark />
         Growblic
-      </a>
+      </Link>
       <ul className="nav-links">
         <li>
-          <a href="/#services">Services</a>
+          <Link href="/#services">Services</Link>
         </li>
         <li>
-          <a href="/apps">Apps</a>
+          <Link href="/apps">Apps</Link>
         </li>
         <li>
-          <a href="/about">About</a>
+          <Link href="/about">About</Link>
         </li>
         <li>
-          <a href="/pricing">Pricing</a>
+          <Link href="/pricing">Pricing</Link>
         </li>
         <li>
-          <a href="/#faq">FAQ</a>
+          <Link href="/#faq">FAQ</Link>
         </li>
         <li>
-          <a href="/careers">Careers</a>
+          <Link href="/careers">Careers</Link>
         </li>
       </ul>
       <span className="nav-right">
         <SoundToggle />
-        <a className="btn btn-solid" href="mailto:hello@growblic.com?subject=Start%20a%20project">
+        <a
+          className="btn btn-solid"
+          href="mailto:hello@growblic.com?subject=Start%20a%20project"
+        >
           Start your project
         </a>
       </span>
