@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import Mark from "./Mark";
+import SoundToggle from "./SoundToggle";
 
 export default function Nav() {
   const ref = useRef<HTMLElement>(null);
@@ -42,9 +43,12 @@ export default function Nav() {
           <a href="/#faq">FAQ</a>
         </li>
       </ul>
-      <a className="btn btn-solid" href="/#start">
-        Start your project
-      </a>
+      <span className="nav-right">
+        <SoundToggle />
+        <a className="btn btn-solid" href="/#start">
+          Start your project
+        </a>
+      </span>
     </nav>
   );
 }
