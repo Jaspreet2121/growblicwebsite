@@ -4,7 +4,6 @@ import EnvLayer from "@/components/EnvLayer";
 import Reveal from "@/components/Reveal";
 import Vine from "@/components/Vine";
 import PlantMoment from "@/components/PlantMoment";
-import ContactForm from "@/components/ContactForm";
 import Estimator from "@/components/Estimator";
 import Footer from "@/components/Footer";
 import Splash from "@/components/Splash";
@@ -415,24 +414,6 @@ export default function Home() {
             </div>
           </Reveal>
 
-          <Reveal id="start" className="start">
-            <div data-vine-node />
-            <div className="sec-head">
-              <p className="kicker r" style={css(0)}>
-                Start
-              </p>
-              <h2 className="r" style={css(1)}>
-                Tell us what you want to grow.
-              </h2>
-              <p className="lede r" style={css(2)}>
-                One message starts it. You get a same-day reply, a
-                plain-language plan, and a fixed quote. No pressure, no jargon.
-              </p>
-            </div>
-            <div className="start-panel r" style={css(3)}>
-              <ContactForm />
-            </div>
-          </Reveal>
         </div>
       </main>
 

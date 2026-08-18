@@ -1,8 +1,8 @@
 "use client";
 
-/* The project estimator: pick what you need, and the choices prefill the
-   contact form for a same-day fixed quote. No invented prices; the quote is
-   the number, and it comes from a human. */
+/* The project estimator: pick what you need, and the choices open a
+   ready-made email for a same-day fixed quote. No invented prices; the
+   quote is the number, and it comes from a human. */
 
 import { useMemo, useState } from "react";
 
@@ -45,15 +45,11 @@ export default function Estimator() {
     );
   }
 
-  function sendToForm() {
-    if (!summary) return;
-    try {
-      sessionStorage.setItem("growblic-estimate", summary);
-    } catch {}
-    window.dispatchEvent(
-      new CustomEvent("growblic-estimate", { detail: summary })
-    );
-  }
+  const mailHref = summary
+    ? `mailto:hello@growblic.com?subject=${encodeURIComponent(
+        "Project enquiry"
+      )}&body=${encodeURIComponent(summary + "\n\n")}`
+    : "#";
 
   return (
     <div className="estimator">
@@ -115,22 +111,18 @@ export default function Estimator() {
         </p>
         <a
           className={`btn btn-solid${summary ? "" : " btn-off"}`}
-          href="#start"
+          href={mailHref}
           tabIndex={summary ? undefined : -1}
           onClick={(e) => {
-            if (!summary) {
-              e.preventDefault();
-              return;
-            }
-            sendToForm();
+            if (!summary) e.preventDefault();
           }}
           aria-disabled={!summary}
         >
           Get my fixed quote
         </a>
         <p className="est-note">
-          A real number from a real person, the same business day. Never a
-          surprise invoice.
+          Your picks open a ready-made email to us. A real number comes back
+          the same business day, never a surprise invoice.
         </p>
       </div>
     </div>

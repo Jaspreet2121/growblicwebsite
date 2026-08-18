@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-cta">
         <p className="footer-line">Software that grows.</p>
-        <a className="btn btn-solid" href="/#start">
+        <a className="btn btn-solid" href="mailto:hello@growblic.com?subject=Start%20a%20project">
           Start your project
         </a>
       </div>
@@ -35,6 +35,9 @@ export default function Footer() {
             </li>
             <li>
               <a href="/#faq">FAQ</a>
+            </li>
+            <li>
+              <a href="/careers">Careers</a>
             </li>
           </ul>
         </div>

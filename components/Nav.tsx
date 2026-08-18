@@ -42,10 +42,13 @@ export default function Nav() {
         <li>
           <a href="/#faq">FAQ</a>
         </li>
+        <li>
+          <a href="/careers">Careers</a>
+        </li>
       </ul>
       <span className="nav-right">
         <SoundToggle />
-        <a className="btn btn-solid" href="/#start">
+        <a className="btn btn-solid" href="mailto:hello@growblic.com?subject=Start%20a%20project">
           Start your project
         </a>
       </span>

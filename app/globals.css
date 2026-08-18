@@ -2203,3 +2203,79 @@ html.splash-lock body {
   color: var(--accent);
   border-color: var(--accent-muted);
 }
+
+
+/* ---- Careers ---- */
+
+.role-grid {
+  margin-top: 44px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 18px;
+  padding: 26px 24px;
+  transition: border-color 0.4s var(--ease-soft), transform 0.4s var(--ease-out);
+}
+
+.role-card:hover {
+  border-color: var(--accent-muted);
+  transform: translateY(-3px);
+}
+
+.role-card h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.role-card p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  flex: 1;
+}
+
+.role-card .btn {
+  margin-top: 8px;
+}
+
+.careers-apply .start-panel {
+  margin-left: 0;
+}
+
+.field select {
+  width: 100%;
+  background: rgba(9, 10, 12, 0.7);
+  border: 1px solid var(--panel-edge);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: var(--font-body), sans-serif;
+  font-size: 1rem;
+  padding: 13px 14px;
+  transition: border-color 0.3s var(--ease-soft);
+}
+
+.field select:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+}
+
+@media (max-width: 1040px) {
+  .role-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 560px) {
+  .role-grid {
+    grid-template-columns: 1fr;
+  }
+}
