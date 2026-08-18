@@ -4,7 +4,6 @@ import EnvLayer from "@/components/EnvLayer";
 import Reveal from "@/components/Reveal";
 import Vine from "@/components/Vine";
 import PlantMoment from "@/components/PlantMoment";
-import Estimator from "@/components/Estimator";
 import Footer from "@/components/Footer";
 import Splash from "@/components/Splash";
 import { SKIFI_URL, GROWBLIC_APP_URL, PLAY_DEV_URL } from "@/components/links";
@@ -240,6 +239,54 @@ export default function Home() {
             </p>
           </Reveal>
 
+          <Reveal id="about" className="about">
+            <div data-vine-node />
+            <p className="kicker r" style={css(0)}>
+              About us
+            </p>
+            <h2 className="r" style={css(1)}>
+              The team behind the apps.
+            </h2>
+            <div className="about-split">
+              <div className="about-story">
+                <p className="r" style={css(2)}>
+                  Growblic started with a simple idea: build software the way
+                  you would want it built for yourself. Real products, plain
+                  words, and no disappearing after launch.
+                </p>
+                <p className="r" style={css(3)}>
+                  Today 35+ of our own apps are live on the stores, and our
+                  client work spans 10+ business categories, from retail and
+                  education to salons and farms. Everything ships from one
+                  in-house team that designs, builds, and grows together.
+                </p>
+              </div>
+              <div className="about-team r" style={css(4)}>
+                <a
+                  className="founder-card"
+                  href="https://www.linkedin.com/in/bintu-malik-6b7917387"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <span className="monogram" aria-hidden="true">
+                    BM
+                  </span>
+                  <span>
+                    <strong>Bintu Malik</strong>
+                    <em>Founder</em>
+                  </span>
+                </a>
+                <p>
+                  Around the founder: engineers, designers, and growth
+                  marketers, all in-house. No subcontractors, ever.
+                </p>
+                <a className="about-join" href="/careers">
+                  We are hiring. See careers
+                </a>
+              </div>
+            </div>
+          </Reveal>
+
           <Reveal className="promises">
             <div data-vine-node />
             <p className="kicker r" style={css(0)}>
@@ -341,23 +388,6 @@ export default function Home() {
             </ol>
           </Reveal>
 
-          <Reveal id="estimate" className="estimate">
-            <div data-vine-node />
-            <p className="kicker r" style={css(0)}>
-              Pricing
-            </p>
-            <h2 className="r" style={css(1)}>
-              Shape your project. Get a real number.
-            </h2>
-            <p className="lede r" style={css(2)}>
-              Pick what you need. Your choices land in the form below, and a
-              fixed quote comes back the same business day.
-            </p>
-            <div className="r" style={css(3)}>
-              <Estimator />
-            </div>
-          </Reveal>
-
           <Reveal id="faq" className="faq">
             <div data-vine-node />
             <div className="sec-head">
@@ -381,8 +411,8 @@ export default function Home() {
                 <summary>How much does a project cost?</summary>
                 <p>
                   Every project gets a fixed quote before any commitment, with
-                  the number and what drives it in plain words. Use the
-                  estimator above or just write to us, and you will have it
+                  the number and what drives it in plain words. Shape it on
+                  the pricing page or just write to us, and you will have it
                   within a day.
                 </p>
               </details>
