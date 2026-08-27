@@ -75,6 +75,17 @@ export default function Footer() {
             </li>
           </ul>
         </div>
+        <div>
+          <h4>Legal</h4>
+          <ul>
+            <li>
+              <Link href="/privacy">Privacy Policy</Link>
+            </li>
+            <li>
+              <Link href="/terms">Terms of Service</Link>
+            </li>
+          </ul>
+        </div>
       </div>
       <div className="footer-bar">
         <p>© 2026 Growblic. All rights reserved.</p>

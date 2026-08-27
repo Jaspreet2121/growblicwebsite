@@ -2480,3 +2480,156 @@ html.splash-lock body {
 .contact-list a:hover {
   color: var(--accent-hover);
 }
+
+
+/* ---- Legal pages (privacy, terms) ---- */
+
+.legal {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 40px;
+  padding-top: clamp(48px, 7vh, 84px);
+}
+
+@media (min-width: 900px) {
+  .legal {
+    grid-template-columns: 230px minmax(0, 1fr);
+    gap: 64px;
+    align-items: start;
+  }
+}
+
+.legal-updated {
+  margin-top: 22px;
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+}
+
+/* Table of contents — sticky beside the text on wide screens, inline above it on small. */
+.legal-toc h2 {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.legal-toc ol {
+  margin-top: 14px;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 9px;
+}
+
+.legal-toc a {
+  color: var(--text-secondary);
+  font-size: 0.92rem;
+  line-height: 1.45;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.legal-toc a:hover,
+.legal-toc a:focus-visible {
+  color: var(--text-primary);
+}
+
+@media (min-width: 900px) {
+  .legal-toc {
+    position: sticky;
+    top: 108px;
+  }
+}
+
+/* Long-form body: a measured column, generous rhythm, quiet rules between sections. */
+.legal-body {
+  max-width: 68ch;
+}
+
+.legal-body section + section {
+  margin-top: 52px;
+  padding-top: 44px;
+  border-top: 1px solid var(--panel-edge);
+}
+
+.legal-body h2 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  font-size: clamp(1.32rem, 2.1vw, 1.62rem);
+  line-height: 1.25;
+  scroll-margin-top: 104px;
+}
+
+.legal-body h3 {
+  margin-top: 30px;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 600;
+  font-size: 1.02rem;
+}
+
+.legal-body p {
+  margin-top: 16px;
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.72;
+}
+
+.legal-body ul,
+.legal-body ol {
+  margin-top: 16px;
+  padding-left: 20px;
+  display: grid;
+  gap: 10px;
+}
+
+.legal-body li {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.68;
+}
+
+.legal-body strong {
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.legal-body a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* The points a reader must not miss (encryption, no-ads, not-a-payment-processor). */
+.legal-callout {
+  margin-top: 20px;
+  padding: 16px 18px;
+  border-left: 2px solid var(--accent);
+  border-radius: 4px;
+  background: var(--panel);
+}
+
+.legal-body .legal-callout {
+  color: var(--text-primary);
+}
+
+.legal-contact {
+  line-height: 1.9;
+}
+
+.legal-perms {
+  margin-top: 18px;
+}
+
+.legal-perms dt {
+  margin-top: 18px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.legal-perms dd {
+  margin: 6px 0 0;
+  color: var(--text-secondary);
+  line-height: 1.68;
+}
