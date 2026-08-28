@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Terms of Service | Growblic",
   description:
-    "The terms that apply when you use Skifi and the Growblic platform — eligibility, acceptable use, your content, payments, Dating, and liability.",
+    "The terms that apply when you use Growblic: Chat, Call, Meet and the Growblic platform — eligibility, acceptable use, your content, payments, Dating, and liability.",
 };
 
 const css = (v: number) => ({ "--i": v } as React.CSSProperties);
@@ -48,7 +48,8 @@ export default function TermsPage() {
             Terms of Service
           </h1>
           <p className="lede r" style={css(2)}>
-            These terms apply when you use <strong>Skifi</strong> or any service built
+            These terms apply when you use <strong>Growblic: Chat, Call, Meet</strong> or
+            any service built
             on the <strong>Growblic platform</strong>. They are written to be read, not
             to be skimmed past.
           </p>
@@ -73,7 +74,7 @@ export default function TermsPage() {
             <section id="acceptance">
               <h2>1. Accepting these terms</h2>
               <p>
-                By creating an account or using Skifi or the Growblic platform, you
+                By creating an account or using the Growblic app or the Growblic platform, you
                 agree to these terms and to our{" "}
                 <Link href="/privacy">Privacy Policy</Link>. If you do not agree, please
                 do not use the service.
@@ -87,7 +88,10 @@ export default function TermsPage() {
             <section id="eligibility">
               <h2>2. Who can use the service</h2>
               <ul>
-                <li>You must be at least <strong>13 years old</strong> to use Skifi.</li>
+                <li>
+                  You must be at least <strong>13 years old</strong> to use the Growblic
+                  app.
+                </li>
                 <li>
                   <strong>Dating is 18+ only.</strong> Enabling it requires your date of
                   birth, and the app will not switch it on for anyone under 18.
@@ -179,7 +183,7 @@ export default function TermsPage() {
                 </strong>
               </p>
               <p>
-                If you add a UPI ID, Skifi stores it and generates a QR code so people
+                If you add a UPI ID, Growblic stores it and generates a QR code so people
                 can pay you. When someone taps to pay, the app simply{" "}
                 <strong>hands off to their own UPI application</strong>, where the
                 payment happens between them, their bank, and yours.

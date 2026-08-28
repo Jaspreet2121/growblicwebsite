@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Privacy Policy | Growblic",
   description:
-    "How Growblic and the Skifi messaging app collect, use and protect your data — written plainly, and grounded in how the apps actually work.",
+    "How Growblic and the Growblic: Chat, Call, Meet messaging app collect, use and protect your data — written plainly, and grounded in how the apps actually work.",
 };
 
 const css = (v: number) => ({ "--i": v } as React.CSSProperties);
@@ -47,7 +47,8 @@ export default function PrivacyPage() {
             Privacy Policy
           </h1>
           <p className="lede r" style={css(2)}>
-            This policy covers <strong>Skifi</strong>, our messaging app, and the{" "}
+            This policy covers <strong>Growblic: Chat, Call, Meet</strong>, our messaging
+            app, and the{" "}
             <strong>Growblic platform</strong> that powers chat and calling inside
             other companies&rsquo; apps. We have written it in plain English and
             described what the software genuinely does — no more, and no less.
@@ -74,7 +75,8 @@ export default function PrivacyPage() {
               <h2>1. Who we are</h2>
               <p>
                 Growblic is a software studio based in India. We build and operate{" "}
-                <strong>Skifi</strong>, a messaging app for everyday use, and the{" "}
+                <strong>Growblic: Chat, Call, Meet</strong>, a messaging app for everyday use,
+                and the{" "}
                 <strong>Growblic platform</strong>, which other businesses
                 (&ldquo;integrators&rdquo;) use to add messaging and calling to their
                 own apps.
@@ -88,7 +90,7 @@ export default function PrivacyPage() {
                 <a href="mailto:privacy@growblic.com">privacy@growblic.com</a>.
               </p>
               <p>
-                When you use Skifi, Growblic is the data fiduciary. When you use a
+                When you use the Growblic app, Growblic is the data fiduciary. When you use a
                 third party&rsquo;s app built on the Growblic platform,{" "}
                 <strong>that company</strong> decides what happens to the data in
                 their app, and we process it on their behalf — their own privacy
@@ -173,7 +175,9 @@ export default function PrivacyPage() {
                 <li>
                   <strong>UPI payment identity.</strong> Only if you add it. We store
                   your UPI ID and generate a QR code from it so people can pay you.{" "}
-                  <strong>Skifi never processes payments and never touches money</strong>{" "}
+                  <strong>
+                    Growblic never processes payments and never touches money
+                  </strong>{" "}
                   — the payment happens entirely in your own UPI app, and we see none
                   of it.
                 </li>
@@ -251,7 +255,7 @@ export default function PrivacyPage() {
                   <strong>Integrators, and only within their own app.</strong> If you use
                   a third party&rsquo;s app built on the Growblic platform, the
                   conversations you have <em>inside that app</em> belong to that
-                  company&rsquo;s service. This never gives them access to your Skifi
+                  company&rsquo;s service. This never gives them access to your Growblic
                   chats or to any other integrator&rsquo;s data.
                 </li>
                 <li>
@@ -319,7 +323,7 @@ export default function PrivacyPage() {
             <section id="children">
               <h2>9. Children</h2>
               <p>
-                Skifi is not intended for anyone under <strong>13</strong>, and you may
+                The Growblic app is not intended for anyone under <strong>13</strong>, and you may
                 not create an account if you are younger than that.
               </p>
               <p>
@@ -353,7 +357,7 @@ export default function PrivacyPage() {
                 <dd>Improving Nearby People&rsquo;s precision using anonymous rotating tokens, and passing messages between nearby devices when the network is unavailable.</dd>
 
                 <dt>Contacts</dt>
-                <dd>Finding people you already know who are on Skifi. We look up numbers you choose to search rather than continuously uploading your address book.</dd>
+                <dd>Finding people you already know who are on Growblic. We look up numbers you choose to search rather than continuously uploading your address book.</dd>
 
                 <dt>Notifications</dt>
                 <dd>Telling you about new messages and incoming calls.</dd>
