@@ -195,10 +195,10 @@ export default function Home() {
                   height={512}
                 />
                 <span className="skifi-kicker">New / Chatting app</span>
-                <span className="skifi-name">Skifi</span>
+                <span className="skifi-name">Growblic: Chat, Call, Meet</span>
                 <span className="skifi-copy">
-                  Real-time chat and calls, built the Growblic way. Fast,
-                  clean, and yours.
+                  Real-time chat and calls, built the way we build everything.
+                  Fast, clean, and yours.
                 </span>
                 <span className="btn btn-solid">Get it on Google Play</span>
               </span>

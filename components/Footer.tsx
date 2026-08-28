@@ -50,7 +50,7 @@ export default function Footer() {
           <ul>
             <li>
               <a href={SKIFI_URL} target="_blank" rel="noopener noreferrer">
-                Skifi chatting app
+                Growblic: Chat, Call, Meet
               </a>
             </li>
             <li>

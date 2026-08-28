@@ -8,7 +8,7 @@ import { SKIFI_URL, GROWBLIC_APP_URL, PLAY_DEV_URL } from "@/components/links";
 export const metadata: Metadata = {
   title: "Growblic Apps | Every app we have shipped",
   description:
-    "35+ Growblic apps live on the Play Store and App Store: Skifi, Growblic, Classta, Fresh Fade, Bill Vault, and more.",
+    "35+ Growblic apps live on the Play Store and App Store: Growblic: Chat, Call, Meet, Classta, Fresh Fade, Bill Vault, and more.",
 };
 
 const NAMES: Record<string, string> = {
@@ -97,10 +97,10 @@ export default function AppsPage() {
                 height={512}
               />
               <span className="skifi-kicker">New / Chatting app</span>
-              <span className="skifi-name">Skifi</span>
+              <span className="skifi-name">Growblic: Chat, Call, Meet</span>
               <span className="skifi-copy">
-                Real-time chat and calls, built the Growblic way. Fast, clean,
-                and yours.
+                Real-time chat and calls, built the way we build everything.
+                Fast, clean, and yours.
               </span>
               <span className="btn btn-solid">Get it on Google Play</span>
             </span>
@@ -120,7 +120,7 @@ export default function AppsPage() {
                 width={120}
                 height={120}
               />
-              <span>Skifi</span>
+              <span>Growblic: Chat, Call, Meet</span>
             </a>
             {APPS.map((slug) => (
               <a

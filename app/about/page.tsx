@@ -23,7 +23,7 @@ const CATEGORIES: { name: string; apps: string }[] = [
   { name: "Events", apps: "EventSync" },
   { name: "Productivity", apps: "Project Pipeline, Bill Vault, Docura" },
   { name: "Social and community", apps: "Sociva, SocioConnect" },
-  { name: "Communication", apps: "Skifi, Qmail" },
+  { name: "Communication", apps: "Growblic: Chat, Call, Meet, and Qmail" },
 ];
 
 export default function AboutPage() {
@@ -217,7 +217,8 @@ export default function AboutPage() {
               <p className="r" style={css(2)}>
                 The fastest way to reach us is email, and you will hear back
                 the same business day. Our apps are on the stores, our
-                chatting app Skifi is on its way, and the rest of us is on
+                chatting app, Growblic: Chat, Call, Meet, is on its way, and
+                the rest of us is on
                 the usual places.
               </p>
               <div className="contact-ctas r" style={css(3)}>
@@ -236,7 +237,7 @@ export default function AboutPage() {
               <ul className="contact-list">
                 <li>
                   <a href={SKIFI_URL} target="_blank" rel="noopener noreferrer">
-                    Skifi chatting app
+                    Growblic: Chat, Call, Meet
                   </a>
                 </li>
                 <li>
