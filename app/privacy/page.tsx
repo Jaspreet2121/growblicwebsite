@@ -274,9 +274,16 @@ export default function PrivacyPage() {
                 expect across your devices.
               </p>
               <p>
-                <strong>To delete your account and your data</strong>, email{" "}
+                <strong>You can delete your account yourself, from inside the app</strong> —
+                Settings → Account → Delete account. It takes effect immediately, and you do
+                not need to ask us. See{" "}
+                <Link href="/delete-account">Delete your account</Link> for what is removed
+                and what is kept.
+              </p>
+              <p>
+                If you have lost access to the app or to your phone number, email{" "}
                 <a href="mailto:privacy@growblic.com">privacy@growblic.com</a> from the
-                address or phone number linked to your account. We process erasure
+                address or phone number linked to your account instead. We process erasure
                 requests <strong>within 30 days</strong>. Some records may be retained
                 where the law requires it.
               </p>

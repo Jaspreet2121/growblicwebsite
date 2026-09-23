@@ -33,6 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
     },
     {
+      // Google Play's Data safety form requires this URL to be publicly reachable.
+      url: "https://www.growblic.com/delete-account",
+      lastModified: new Date(),
+      changeFrequency: "yearly",
+      priority: 0.5,
+    },
+    {
       url: "https://www.growblic.com/privacy",
       lastModified: new Date(),
       changeFrequency: "yearly",
