@@ -1,0 +1,32 @@
+# Compose project: growblic-site
+# Shares NOTHING with the chat-platform stack except the external network.
+# No host ports; Caddy reaches this container as growblic-site:3000 over chatnet.
+services:
+  growblic-site:
+    build: .
+    image: growblic-site:latest
+    container_name: growblic-site
+    restart: unless-stopped
+    expose:
+      - "3000"
+    environment:
+      NODE_ENV: production
+      NEXT_TELEMETRY_DISABLED: "1"
+      HOSTNAME: 0.0.0.0
+      PORT: "3000"
+      RESEND_API_KEY: ${RESEND_API_KEY:-}
+      CONTACT_TO: ${CONTACT_TO:-hello@growblic.com}
+      CONTACT_FROM: ${CONTACT_FROM:-Growblic Website <onboarding@resend.dev>}
+    volumes:
+      - growblic-leads:/app/data
+    networks:
+      - default
+
+volumes:
+  growblic-leads:
+    name: growblic-site_leads
+
+networks:
+  default:
+    external: true
+    name: chat-platform-prod_chatnet
