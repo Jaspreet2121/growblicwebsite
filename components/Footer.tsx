@@ -87,6 +87,9 @@ export default function Footer() {
             <li>
               <Link href="/delete-account">Delete your account</Link>
             </li>
+            <li>
+              <Link href="/support">Support</Link>
+            </li>
           </ul>
         </div>
       </div>
