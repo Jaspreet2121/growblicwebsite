@@ -141,8 +141,8 @@ export default function PrivacyPage() {
                 <li>
                   <strong>People you look up or message.</strong> If you search for a
                   phone number to start a chat, we check whether that number has an
-                  account. We do not upload or store your whole address book in the
-                  background.
+                  account. Finding your existing contacts is separate, permission-gated,
+                  and described under <strong>Contacts</strong> below.
                 </li>
                 <li>
                   <strong>Call metadata</strong> — who called whom, when, and how long
@@ -153,6 +153,18 @@ export default function PrivacyPage() {
 
               <h3>Only if you turn the feature on</h3>
               <ul>
+                <li>
+                  <strong>Contacts.</strong> With your permission, the app sends the phone
+                  numbers in your address book to Growblic for one purpose only: to find
+                  which of your contacts are on Growblic. The numbers are matched against
+                  accounts and then discarded — we do not store your address book, and the
+                  numbers are not written to our logs. Two things are kept, neither of
+                  which contains a phone number: a standard access log recording that a
+                  contacts check happened, from which IP address and when, for up to 14
+                  days; and a count of how many checks your account ran in the last hour,
+                  used to prevent abuse. You can revoke the Contacts permission at any time
+                  in your iOS or Android settings, and the app keeps working without it.
+                </li>
                 <li>
                   <strong>Live location.</strong> Shared only when you start sharing,
                   only with that chat, and it stops when you end it or the timer runs
@@ -392,7 +404,7 @@ export default function PrivacyPage() {
                 <dd>Improving Nearby People&rsquo;s precision using anonymous rotating tokens, and passing messages between nearby devices when the network is unavailable.</dd>
 
                 <dt>Contacts</dt>
-                <dd>Finding people you already know who are on Growblic. We look up numbers you choose to search rather than continuously uploading your address book.</dd>
+                <dd>Finding people you already know who are on Growblic. Your address book&rsquo;s numbers are matched and not stored — see <a href="#data-we-collect">Contacts</a> under Data we collect.</dd>
 
                 <dt>Notifications</dt>
                 <dd>Telling you about new messages and incoming calls.</dd>
