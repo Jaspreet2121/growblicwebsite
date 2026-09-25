@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const css = (v: number) => ({ "--i": v } as React.CSSProperties);
 
-const LAST_UPDATED = "27 August 2026";
+const LAST_UPDATED = "25 September 2026";
 
 const SECTIONS: { id: string; title: string }[] = [
   { id: "who-we-are", title: "1. Who we are" },
@@ -21,13 +21,14 @@ const SECTIONS: { id: string; title: string }[] = [
   { id: "encryption", title: "3. End-to-end encryption" },
   { id: "how-we-use", title: "4. How we use your data" },
   { id: "sharing", title: "5. Who we share data with" },
-  { id: "retention", title: "6. Keeping and deleting data" },
-  { id: "your-rights", title: "7. Your rights" },
-  { id: "grievance", title: "8. Grievance Officer" },
-  { id: "children", title: "9. Children" },
-  { id: "permissions", title: "10. App permissions and why we ask" },
-  { id: "changes", title: "11. Changes to this policy" },
-  { id: "contact", title: "12. Contact us" },
+  { id: "staff-access", title: "6. Access by Growblic staff" },
+  { id: "retention", title: "7. Keeping and deleting data" },
+  { id: "your-rights", title: "8. Your rights" },
+  { id: "grievance", title: "9. Grievance Officer" },
+  { id: "children", title: "10. Children" },
+  { id: "permissions", title: "11. App permissions and why we ask" },
+  { id: "changes", title: "12. Changes to this policy" },
+  { id: "contact", title: "13. Contact us" },
 ];
 
 export default function PrivacyPage() {
@@ -267,8 +268,35 @@ export default function PrivacyPage() {
               </ul>
             </section>
 
+            <section id="staff-access">
+              <h2>6. Access by Growblic staff</h2>
+              <p>
+                A small number of authorised Growblic staff can view limited account
+                information — including your <strong>match history in Dating</strong>:
+                who you matched with, and when. They cannot see your location, your
+                swipes, or the content of your encrypted messages.
+              </p>
+              <p>
+                This access exists for three reasons only: investigating reports of abuse
+                or harassment, protecting someone&rsquo;s safety, and meeting a legal
+                obligation.
+              </p>
+              <p>
+                Every such access is restricted to the most senior staff roles, requires a
+                written reason recorded at the time, and is logged with who looked, what
+                they looked at, why, and when. Those logs are retained and reviewable.
+                There is no facility to export or bulk-download match history.
+              </p>
+              <p>
+                Dating is opt-in — see <a href="#data-we-collect">Data we collect</a>.
+                Switching it off, and deleting your account, are covered under{" "}
+                <a href="#your-rights">Your rights</a> and{" "}
+                <a href="#retention">Keeping and deleting data</a>.
+              </p>
+            </section>
+
             <section id="retention">
-              <h2>6. Keeping and deleting data</h2>
+              <h2>7. Keeping and deleting data</h2>
               <p>
                 We keep your data while your account is active, so the app works as you
                 expect across your devices.
@@ -294,7 +322,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="your-rights">
-              <h2>7. Your rights</h2>
+              <h2>8. Your rights</h2>
               <p>
                 Under India&rsquo;s Digital Personal Data Protection Act, 2023, and
                 equivalent rights for users covered by the GDPR, you can:
@@ -313,7 +341,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="grievance">
-              <h2>8. Grievance Officer</h2>
+              <h2>9. Grievance Officer</h2>
               <p>
                 In line with the Digital Personal Data Protection Act, 2023, you can
                 reach our Grievance Officer about any privacy concern or complaint:
@@ -328,7 +356,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="children">
-              <h2>9. Children</h2>
+              <h2>10. Children</h2>
               <p>
                 The Growblic app is not intended for anyone under <strong>13</strong>, and you may
                 not create an account if you are younger than that.
@@ -345,7 +373,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="permissions">
-              <h2>10. App permissions and why we ask</h2>
+              <h2>11. App permissions and why we ask</h2>
               <p>
                 Every permission below is requested at the moment the feature needs it,
                 and the app keeps working if you decline — you simply lose that feature.
@@ -375,7 +403,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="changes">
-              <h2>11. Changes to this policy</h2>
+              <h2>12. Changes to this policy</h2>
               <p>
                 We will update this policy when the product changes. The date at the top
                 always reflects the current version, and we will give notice in the app
@@ -388,7 +416,7 @@ export default function PrivacyPage() {
             </section>
 
             <section id="contact">
-              <h2>12. Contact us</h2>
+              <h2>13. Contact us</h2>
               <p className="legal-contact">
                 <strong>Growblic</strong>
                 <br />
