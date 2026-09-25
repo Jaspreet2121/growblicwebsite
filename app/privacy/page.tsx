@@ -314,6 +314,12 @@ export default function PrivacyPage() {
                 expect across your devices.
               </p>
               <p>
+                If you use Dating, your <strong>match history</strong> — including matches
+                that were later ended (unmatched) — is kept while your account exists, and is
+                deleted with it. See <a href="#staff-access">Access by Growblic staff</a> for
+                who can view it and why.
+              </p>
+              <p>
                 <strong>You can delete your account yourself, from inside the app</strong> —
                 Settings → Account → Delete account. It takes effect immediately, and you do
                 not need to ask us. See{" "}
